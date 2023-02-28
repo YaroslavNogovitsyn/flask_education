@@ -3,7 +3,6 @@ from flask import Flask, render_template, request, flash
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dadsadasdzxcdf19'
 
-
 menu = [{"name": "Установка", "url": "install-flask"},
         {"name": "Первое приложение", "url": "first-app"},
         {"name": "Обратная связь", "url": "contact"}]
@@ -27,6 +26,11 @@ def contact():
         else:
             flash('Ошибка отправки сообщения', category='error')
     return render_template('contact.html', title="Обратная связь", menu=menu)
+
+
+@app.errorhandler(404)
+def pageNotFound(error):
+    return render_template('page404.html', title='Страница не найдена', menu=menu), 404
 
 
 if __name__ == '__main__':
