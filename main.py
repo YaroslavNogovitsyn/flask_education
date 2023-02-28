@@ -51,7 +51,7 @@ menu = [{"title": "Установка", "url": "install-flask"},
 def index():
     db = get_db()
     dbase = FDataBase(db)
-    return render_template('index.html', menu=dbase.getMenu())
+    return render_template('index.html', menu=dbase.getMenu(), posts=dbase.getPostsAnonce())
 
 
 @app.route('/about')
@@ -107,6 +107,17 @@ def addPost():
         else:
             flash('Ошибка добавления статьи', category='error')
     return render_template('add_post.html', menu=dbase.getMenu(), title="Добавление статьи")
+
+
+@app.route("/post/<int:id_post>")
+def showPost(id_post):
+    db = get_db()
+    dbase = FDataBase(db)
+    title, post = dbase.getPost(id_post)
+    if not title:
+        abort(404)
+
+    return render_template('post.html', menu=dbase.getMenu(), title=title, post=post)
 
 
 if __name__ == '__main__':
