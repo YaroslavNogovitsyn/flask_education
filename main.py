@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, session, redirect, url_for, abort
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'dadsadasdzxcdf19'
@@ -26,6 +26,25 @@ def contact():
         else:
             flash('Ошибка отправки сообщения', category='error')
     return render_template('contact.html', title="Обратная связь", menu=menu)
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    print(request.method)
+    print(request.form)
+    if 'userLogged' in session:
+        return redirect(url_for('profile', username=session['userLogged']))
+    if request.method == 'POST' and request.form['username'] == 'yaris' and request.form['psw'] == '123':
+        session['userLogged'] = request.form['username']
+        return redirect(url_for('profile', username=session['userLogged']))
+    return render_template('login.html', title='Авторизация', menu=menu)
+
+
+@app.route('/profile/<username>')
+def profile(username):
+    if 'userLogged' not in session or session['userLogged'] != username:
+        abort(401)
+    return f'Профиль пользователя: {username}'
 
 
 @app.errorhandler(404)
