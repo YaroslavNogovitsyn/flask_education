@@ -121,6 +121,6 @@ class FDataBase:
             self.__cur.execute(f"UPDATE users SET avatar = ? WHERE id = ?", (binary, user_id))
             self.__db.commit()
         except sqlite3.Error as e:
-            print("Ошибка обновления аватара в БД: "+str(e))
+            print(f"Ошибка обновления аватара в БД {e}")
             return False
         return True
